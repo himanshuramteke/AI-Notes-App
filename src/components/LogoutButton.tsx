@@ -5,6 +5,7 @@ import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import { logoutAction } from "@/action/user";
 
 function LogoutButton() {
   const router = useRouter();
@@ -13,7 +14,7 @@ function LogoutButton() {
   const handleLogout = async () => {
     setLoading(true);
 
-    const errorMessage = false;
+    const errorMessage = await logoutAction();
 
     if (!errorMessage) {
       router.push("/");

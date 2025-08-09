@@ -2,13 +2,14 @@
 
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
-import { useSonner } from "sonner";
+import { toast } from "sonner";
 import { CardContent, CardFooter } from "./ui/card";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
+import { loginAction, signupAction } from "@/action/user";
 
 type Props = {
   type: "login" | "signup";
@@ -18,12 +19,39 @@ function AuthForm({ type }: Props) {
   const isLoginForm = type === "login";
 
   const router = useRouter();
-  const { toast } = useSonner();
 
   const [isPending, startTransition] = useTransition();
 
-  const handleSubmit = (formData: FormData) => {
-    console.log("form submitted");
+  const handleSubmit = async (formData: FormData) => {
+    startTransition(async () => {
+      try {
+        const email = formData.get("email") as string;
+        const password = formData.get("password") as string;
+
+        let errorMessage = "";
+
+        if (isLoginForm) {
+          const result = await loginAction(email, password);
+          errorMessage = result?.errorMessage || "";
+        } else {
+          const result = await signupAction(email, password);
+          errorMessage = result?.errorMessage || "";
+        }
+
+        if (!errorMessage) {
+          router.replace(`/?toastType=${type}`);
+          toast.success(
+            isLoginForm ? "Logged in successfully!" : "Account created!"
+          );
+        } else {
+          toast.error(errorMessage);
+        }
+      } catch (err) {
+        toast.error(
+          err instanceof Error ? err.message : "Something went wrong."
+        );
+      }
+    });
   };
 
   return (
