@@ -2,6 +2,7 @@
 
 import { getUser } from "@/auth/server";
 import { prisma } from "@/db/primsa";
+import geminiAi from "@/gemini";
 import { handleError } from "@/lib/utils";
 
 export const createNoteAction = async (noteId: string) => {
@@ -51,5 +52,74 @@ export const deleteNoteAction = async (noteId: string) => {
     return { errorMessage: null };
   } catch (error) {
     return handleError(error);
+  }
+};
+
+export const askAIAboutNotesAction = async (
+  newQuestions: string[],
+  responses: string[]
+) => {
+  const user = await getUser();
+  if (!user) throw new Error("You must be logged in to ask AI questions");
+
+  const notes = await prisma.note.findMany({
+    where: { authorId: user.id },
+    orderBy: { createdAt: "desc" },
+    select: { text: true, createdAt: true, updatedAt: true },
+  });
+
+  if (notes.length === 0) {
+    return "You don't have any notes yet.";
+  }
+
+  const formattedNotes = notes
+    .map((note) =>
+      `
+      Text: ${note.text}
+      Created at: ${note.createdAt}
+      Last updated: ${note.updatedAt}
+      `.trim()
+    )
+    .join("\n");
+
+  // Build conversation history
+  let conversationHistory = "";
+  for (let i = 0; i < newQuestions.length - 1; i++) {
+    conversationHistory += `User: ${newQuestions[i]}\n`;
+    if (responses.length > i) {
+      conversationHistory += `Assistant: ${responses[i]}\n`;
+    }
+  }
+
+  const systemPrompt = `
+You are a helpful assistant that answers questions about a user's notes. 
+Assume all questions are related to the user's notes. 
+Make sure that your answers are not too verbose and you speak succinctly. 
+Your responses MUST be formatted in clean, valid HTML with proper structure. 
+Use tags like <p>, <strong>, <em>, <ul>, <ol>, <li>, <h1> to <h6>, and <br> when appropriate. 
+Do NOT wrap the entire response in a single <p> tag unless it's a single paragraph. 
+Avoid inline styles, JavaScript, or custom attributes.
+
+Rendered like this in JSX:
+<p dangerouslySetInnerHTML={{ __html: YOUR_RESPONSE }} />
+
+Here are the user's notes:
+${formattedNotes}
+
+${conversationHistory ? `Previous conversation:\n${conversationHistory}` : ""}
+`;
+
+  const currentQuestion = newQuestions[newQuestions.length - 1];
+  const fullPrompt = `${systemPrompt}\n\nUser: ${currentQuestion}`;
+
+  try {
+    const response = await geminiAi.models.generateContent({
+      model: "gemini-1.5-flash",
+      contents: fullPrompt,
+    });
+    return response.text || "A problem has occurred";
+  } catch (error) {
+    console.error("Gemini AI error:", error);
+    return "A problem has occurred";
   }
 };
