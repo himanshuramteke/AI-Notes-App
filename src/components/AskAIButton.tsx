@@ -141,7 +141,10 @@ function AskAIButton({ user }: Props) {
             value={questionText}
             onChange={(e) => setQuestionText(e.target.value)}
           />
-          <Button className="ml-auto size-8 rounded-full">
+          <Button
+            className="ml-auto size-8 rounded-full"
+            onClick={handleSubmit}
+          >
             <ArrowUpIcon className="text-background" />
           </Button>
         </div>

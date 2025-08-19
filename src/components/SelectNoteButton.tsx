@@ -49,7 +49,7 @@ function SelectNoteButton({ note }: Props) {
         <p className="w-full overflow-hidden truncate text-ellipsis whitespace-nowrap">
           {noteText}
         </p>
-        <p className="text-muted-foreground text-xs">
+        <p className="text-muted-foreground text-xs" suppressHydrationWarning>
           {note.updatedAt.toLocaleDateString()}
         </p>
       </Link>

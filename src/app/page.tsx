@@ -12,6 +12,16 @@ const Homepage = async ({ searchParams }: Props) => {
   const noteIdParam = (await searchParams).noteId;
   const user = await getUser();
 
+  // If no user, they should be redirected by middleware
+  // But in case they reach here, show a loading/redirect message
+  if (!user) {
+    return (
+      <div className="flex flex-col h-full items-center justify-center gap-4">
+        <p>Please log in to access your notes.</p>
+      </div>
+    );
+  }
+
   const noteId = Array.isArray(noteIdParam)
     ? noteIdParam![0]
     : noteIdParam || "";
