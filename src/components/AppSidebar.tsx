@@ -5,7 +5,7 @@ import {
   SidebarGroup,
   SidebarGroupLabel,
 } from "@/components/ui/sidebar";
-import { prisma } from "@/db/primsa";
+import { prisma } from "@/db/prisma";
 import { Note } from "@prisma/client";
 import Link from "next/link";
 import SidebarGroupContent from "./SidebarGroupContext";

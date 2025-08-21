@@ -1,7 +1,7 @@
 "use server";
 
 import { getUser } from "@/auth/server";
-import { prisma } from "@/db/primsa";
+import { prisma } from "@/db/prisma";
 import geminiAi from "@/gemini";
 import { handleError } from "@/lib/utils";
 

@@ -2,7 +2,7 @@ import { getUser } from "@/auth/server";
 import AskAIButton from "@/components/AskAIButton";
 import NewNoteButton from "@/components/NewNoteButton";
 import NoteTextInput from "@/components/NoteTextInput";
-import { prisma } from "@/db/primsa";
+import { prisma } from "@/db/prisma";
 
 type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
