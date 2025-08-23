@@ -1,10 +1,10 @@
-# AI Notes App
+<h1 align="center">AI Notes App📝</h1>
 
 A modern, intelligent note-taking application built with Next.js that integrates AI-powered features for enhanced productivity and note management.
 
-## 🚀 Features
+<h1 align="center"> 🚀 Features </h1>
 
-### Core Functionality
+<h1 align="center"> Core Functionality </h1>
 
 - **Real-time Note Editing**: Create, edit, and manage notes with auto-save functionality
 - **AI-Powered Assistant**: Ask questions about your notes using Google's Gemini AI
@@ -12,14 +12,13 @@ A modern, intelligent note-taking application built with Next.js that integrates
 - **Search & Navigation**: Fuzzy search through your notes using Fuse.js
 - **Responsive Design**: Modern UI with dark/light theme support
 
-### AI Features
+<h1 align="center"> AI Features </h1>
 
 - **Contextual AI Chat**: Ask questions about all your notes and get intelligent responses
 - **Note Analysis**: AI can understand and analyze the content of your entire note collection
 - **Conversational Interface**: Interactive chat interface for seamless AI interaction
 
-### User Experience
-
+<h1 align="center"> User Experience </h1>
 - **Auto-save**: Notes are automatically saved as you type
 - **Sidebar Navigation**: Easy access to all your notes with search functionality
 - **Theme Support**: Dark and light mode with system preference detection
